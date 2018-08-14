@@ -60,12 +60,6 @@ Contains the telephony profiles.
 | timezone             | Int    | [Raw timezone offset][5] of the device                                                                        |
 | os                   | String | Operating system of the device (ex. android)                                                                  |
 
-[1]: http://developer.android.com/reference/android/telephony/TelephonyManager.html#getDataState()
-[2]: http://developer.android.com/reference/android/telephony/TelephonyManager.html#getNetworkType()
-[3]: http://developer.android.com/reference/android/telephony/TelephonyManager.html#getPhoneType()
-[4]: http://developer.android.com/reference/android/telephony/TelephonyManager.html#getSimState()
-[5]: https://developer.android.com/reference/java/util/TimeZone#getRawOffset()
-
 ### GSM Data
 
 Contains the GSM tower profile.
@@ -79,10 +73,8 @@ Contains the GSM tower profile.
 | bitErrorRate   | Int    | GSM bit error rate (0-7, 99) as defined in TS27.007 8.5                                                                                                                                                                             |
 | deviceId       | String | AWARE device UUID                                                                                                                                                                                                                   |
 | timestamp      | Long   | unixtime milliseconds since 1970                                                                                                                                                                                                    |
-| timezone       | Int    | [Raw timezone offset][1] of the device                                                                                                                                                                                              |
+| timezone       | Int    | [Raw timezone offset][5] of the device                                                                                                                                                                                              |
 | os             | String | Operating system of the device (ex. android)                                                                                                                                                                                        |
-
-[1]: https://developer.android.com/reference/java/util/TimeZone#getRawOffset()
 
 ### GSM Neighbors Data
 
@@ -96,10 +88,8 @@ Contains the GSM tower neighbors profiles.
 | signalStrength | Int    | received signal strength. For GSM, it is in “asu” ranging from 0 to 31 (dBm = -113 + 2*asu), 0 means “-113 dBm or less” and 31 means “-51 dBm or greater”. For UMTS, it is the Level index of CPICH RSCP defined in TS 25.125 |
 | deviceId       | String | AWARE device UUID                                                                                                                                                                                                                   |
 | timestamp      | Long   | unixtime milliseconds since 1970                                                                                                                                                                                                    |
-| timezone       | Int    | [Raw timezone offset][1] of the device                                                                                                                                                                                              |
+| timezone       | Int    | [Raw timezone offset][5] of the device                                                                                                                                                                                              |
 | os             | String | Operating system of the device (ex. android)                                                                                                                                                                                        |
-
-[1]: https://developer.android.com/reference/java/util/TimeZone#getRawOffset()
 
 ### CDMA Data
 
@@ -108,8 +98,8 @@ Contains the CDMA tower profile.
 | Field                | Type   | Description                                                                                                                                                                                                                                                                      |
 | -------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | baseStationId        | Int    | CDMA base station identification number, -1 if unknown                                                                                                                                                                                                                           |
-| baseStationLatitude  | Int    | Latitude is a decimal number as specified in [3GPP2 C.S0005-A v6.0][2]. It is represented in units of 0.25 seconds and ranges from -1296000 to 1296000, both values inclusive (corresponding to a range of -90 to +90 degrees). Integer.MAX_VALUE is considered invalid value    |
-| baseStationLongitude | Int    | Longitude is a decimal number as specified in [3GPP2 C.S0005-A v6.0][2]. It is represented in units of 0.25 seconds and ranges from -2592000 to 2592000, both values inclusive (corresponding to a range of -180 to +180 degrees). Integer.MAX_VALUE is considered invalid value |
+| baseStationLatitude  | Int    | Latitude is a decimal number as specified in [3GPP2 C.S0005-A v6.0][6]. It is represented in units of 0.25 seconds and ranges from -1296000 to 1296000, both values inclusive (corresponding to a range of -90 to +90 degrees). Integer.MAX_VALUE is considered invalid value    |
+| baseStationLongitude | Int    | Longitude is a decimal number as specified in [3GPP2 C.S0005-A v6.0][6]. It is represented in units of 0.25 seconds and ranges from -2592000 to 2592000, both values inclusive (corresponding to a range of -180 to +180 degrees). Integer.MAX_VALUE is considered invalid value |
 | networkId            | Int    | CDMA network identification number, -1 if unknown                                                                                                                                                                                                                                |
 | systemId             | Int    | CDMA system identification number, -1 if unknown                                                                                                                                                                                                                                 |
 | signalStrength       | Int    | CDMA RSSI value in dBm                                                                                                                                                                                                                                                           |
@@ -121,9 +111,6 @@ Contains the CDMA tower profile.
 | timestamp            | Long   | unixtime milliseconds since 1970                                                                                                                                                                                                                                                 |
 | timezone             | Int    | [Raw timezone offset][1] of the device                                                                                                                                                                                                                                           |
 | os                   | String | Operating system of the device (ex. android)                                                                                                                                                                                                                                     |
-
-[1]: https://developer.android.com/reference/java/util/TimeZone#getRawOffset()
-[2]: http://www.3gpp2.org/public_html/specs/C.S0005-A_v6.0.pdf
 
 ## Example usage
 
@@ -156,3 +143,10 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 
 http://www.apache.org/licenses/LICENSE-2.0
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+[1]: http://developer.android.com/reference/android/telephony/TelephonyManager.html#getDataState()
+[2]: http://developer.android.com/reference/android/telephony/TelephonyManager.html#getNetworkType()
+[3]: http://developer.android.com/reference/android/telephony/TelephonyManager.html#getPhoneType()
+[4]: http://developer.android.com/reference/android/telephony/TelephonyManager.html#getSimState()
+[5]: https://developer.android.com/reference/java/util/TimeZone#getRawOffset()
+[6]: http://www.3gpp2.org/public_html/specs/C.S0005-A_v6.0.pdf
