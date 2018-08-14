@@ -3,8 +3,10 @@ package com.awareframework.android.sensor.telephony
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.READ_PHONE_STATE
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.IBinder
 import android.support.v4.content.ContextCompat
@@ -61,7 +63,7 @@ class TelephonySensor : AwareSensor() {
         const val ACTION_AWARE_TELEPHONY_START = "com.awareframework.android.sensor.telephony.SENSOR_START"
         const val ACTION_AWARE_TELEPHONY_STOP = "com.awareframework.android.sensor.telephony.SENSOR_STOP"
 
-        const val ACTION_AWARE_TELEPHONY_SET_LABEL = "com.awareframework.android.sensor.telephony.ACTION_AWARE_TELEPHONY_SET_LABEL"
+        const val ACTION_AWARE_TELEPHONY_SET_LABEL = "com.awareframework.android.sensor.telephony.SET_LABEL"
         const val EXTRA_LABEL = "label"
 
         const val ACTION_AWARE_TELEPHONY_SYNC = "com.awareframework.android.sensor.telephony.SENSOR_SYNC"
@@ -69,11 +71,37 @@ class TelephonySensor : AwareSensor() {
         val CONFIG = TelephonyConfig()
 
         val REQUIRED_PERMISSIONS = arrayOf(ACCESS_COARSE_LOCATION, READ_PHONE_STATE)
+
+        fun startService(context: Context, config: TelephonyConfig? = null) {
+            if (config != null)
+                CONFIG.replaceWith(config)
+            context.startService(Intent(context, TelephonyConfig::class.java))
+        }
+
+        fun stopService(context: Context) {
+            context.stopService(Intent(context, TelephonyConfig::class.java))
+        }
     }
 
     private var telephonyManager: TelephonyManager? = null
     private val telephonyState: TelephonyState = TelephonyState()
     private var lastSignalStrength: SignalStrength? = null
+
+    private val telephonyReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent ?: return
+
+            when (intent.action) {
+                ACTION_AWARE_TELEPHONY_SET_LABEL -> {
+                    intent.getStringExtra(EXTRA_LABEL)?.let {
+                        CONFIG.label = it
+                    }
+                }
+
+                ACTION_AWARE_TELEPHONY_SYNC -> onSync(intent)
+            }
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -82,8 +110,12 @@ class TelephonySensor : AwareSensor() {
 
         telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
-        logd("Telephony service created!")
+        registerReceiver(telephonyReceiver, IntentFilter().apply {
+            addAction(ACTION_AWARE_TELEPHONY_SET_LABEL)
+            addAction(ACTION_AWARE_TELEPHONY_SYNC)
+        })
 
+        logd("Telephony service created!")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -107,12 +139,17 @@ class TelephonySensor : AwareSensor() {
 
         dbEngine?.close()
 
+        unregisterReceiver(telephonyReceiver)
+
         logd("Telephony service terminated.")
     }
 
 
     override fun onSync(intent: Intent?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        dbEngine?.startSync(TelephonyData.TABLE_NAME)
+        dbEngine?.startSync(GSMData.TABLE_NAME)
+        dbEngine?.startSync(GSMNeighborsData.TABLE_NAME)
+        dbEngine?.startSync(CDMAData.TABLE_NAME)
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -257,6 +294,35 @@ class TelephonySensor : AwareSensor() {
             sendBroadcast(Intent(ACTION_AWARE_TELEPHONY))
 
             logd("Telephony: $telephonyData")
+        }
+    }
+
+    class TelephonySensorBroadcastReceiver : AwareSensor.SensorBroadcastReceiver() {
+
+        override fun onReceive(context: Context?, intent: Intent?) {
+            context ?: return
+
+            logd("Sensor broadcast received. action: " + intent?.action)
+
+            when (intent?.action) {
+                SENSOR_START_ENABLED -> {
+                    logd("Sensor enabled: " + CONFIG.enabled)
+
+                    if (CONFIG.enabled) {
+                        startService(context)
+                    }
+                }
+
+                ACTION_AWARE_TELEPHONY_STOP,
+                SENSOR_STOP_ALL -> {
+                    logd("Stopping sensor.")
+                    stopService(context)
+                }
+
+                ACTION_AWARE_TELEPHONY_START -> {
+                    startService(context)
+                }
+            }
         }
     }
 }

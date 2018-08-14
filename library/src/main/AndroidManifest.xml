@@ -8,5 +8,16 @@
         <service
             android:name=".TelephonySensor"
             android:exported="true" />
+
+        <receiver
+            android:name=".TelephonySensor$TelephonySensorBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.aware.android.sensor.telephony.SENSOR_START" />
+                <action android:name="com.aware.android.sensor.telephony.SENSOR_STOP" />
+                <action android:name="com.aware.android.sensor.SENSOR_START" />
+                <action android:name="com.aware.android.sensor.SENSOR_STOP" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>
