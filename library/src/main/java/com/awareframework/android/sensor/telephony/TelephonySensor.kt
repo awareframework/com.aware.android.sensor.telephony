@@ -155,7 +155,7 @@ class TelephonySensor : AwareSensor() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     data class TelephonyConfig(
-            val sensorObserver: TelephonyObserver? = null
+            var sensorObserver: TelephonyObserver? = null
     ) : SensorConfig(dbPath = "aware_telephony") {
 
         override fun <T : SensorConfig> replaceWith(config: T) {
