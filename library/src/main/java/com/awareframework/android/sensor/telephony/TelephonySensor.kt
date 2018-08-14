@@ -162,7 +162,7 @@ class TelephonySensor : AwareSensor() {
             super.replaceWith(config)
 
             if (config is TelephonyConfig) {
-                // TODO add fields
+                sensorObserver = config.sensorObserver
             }
         }
     }
