@@ -75,11 +75,11 @@ class TelephonySensor : AwareSensor() {
         fun startService(context: Context, config: TelephonyConfig? = null) {
             if (config != null)
                 CONFIG.replaceWith(config)
-            context.startService(Intent(context, TelephonyConfig::class.java))
+            context.startService(Intent(context, TelephonySensor::class.java))
         }
 
         fun stopService(context: Context) {
-            context.stopService(Intent(context, TelephonyConfig::class.java))
+            context.stopService(Intent(context, TelephonySensor::class.java))
         }
     }
 
