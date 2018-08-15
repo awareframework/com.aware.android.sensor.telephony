@@ -155,7 +155,7 @@ class TelephonySensor : AwareSensor() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     data class TelephonyConfig(
-            var sensorObserver: TelephonyObserver? = null
+            var sensorObserver: SensorObserver? = null
     ) : SensorConfig(dbPath = "aware_telephony") {
 
         override fun <T : SensorConfig> replaceWith(config: T) {
@@ -167,7 +167,7 @@ class TelephonySensor : AwareSensor() {
         }
     }
 
-    interface TelephonyObserver {
+    interface SensorObserver {
         fun onSignalStrengthChanged(strength: SignalStrength)
         fun onCellChanged(cellLocation: CellLocation)
     }
