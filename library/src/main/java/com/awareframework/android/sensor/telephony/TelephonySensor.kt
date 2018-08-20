@@ -38,7 +38,7 @@ import com.awareframework.android.sensor.telephony.model.TelephonyData
 class TelephonySensor : AwareSensor() {
 
     companion object {
-        const val TAG = "AWARETelephonySensor"
+        const val TAG = "AWARE::Telephony"
 
         /**
          * Broadcasted event: new telephony information is available
@@ -68,17 +68,17 @@ class TelephonySensor : AwareSensor() {
 
         const val ACTION_AWARE_TELEPHONY_SYNC = "com.awareframework.android.sensor.telephony.SENSOR_SYNC"
 
-        val CONFIG = TelephonyConfig()
+        val CONFIG = Config()
 
         val REQUIRED_PERMISSIONS = arrayOf(ACCESS_COARSE_LOCATION, READ_PHONE_STATE)
 
-        fun startService(context: Context, config: TelephonyConfig? = null) {
+        fun start(context: Context, config: Config? = null) {
             if (config != null)
                 CONFIG.replaceWith(config)
             context.startService(Intent(context, TelephonySensor::class.java))
         }
 
-        fun stopService(context: Context) {
+        fun stop(context: Context) {
             context.stopService(Intent(context, TelephonySensor::class.java))
         }
     }
@@ -154,20 +154,20 @@ class TelephonySensor : AwareSensor() {
 
     override fun onBind(intent: Intent?): IBinder? = null
 
-    data class TelephonyConfig(
-            var sensorObserver: SensorObserver? = null
+    data class Config(
+            var sensorObserver: Observer? = null
     ) : SensorConfig(dbPath = "aware_telephony") {
 
         override fun <T : SensorConfig> replaceWith(config: T) {
             super.replaceWith(config)
 
-            if (config is TelephonyConfig) {
+            if (config is Config) {
                 sensorObserver = config.sensorObserver
             }
         }
     }
 
-    interface SensorObserver {
+    interface Observer {
         fun onSignalStrengthChanged(strength: SignalStrength)
         fun onCellChanged(cellLocation: CellLocation)
     }
@@ -309,18 +309,18 @@ class TelephonySensor : AwareSensor() {
                     logd("Sensor enabled: " + CONFIG.enabled)
 
                     if (CONFIG.enabled) {
-                        startService(context)
+                        start(context)
                     }
                 }
 
                 ACTION_AWARE_TELEPHONY_STOP,
                 SENSOR_STOP_ALL -> {
                     logd("Stopping sensor.")
-                    stopService(context)
+                    stop(context)
                 }
 
                 ACTION_AWARE_TELEPHONY_START -> {
-                    startService(context)
+                    start(context)
                 }
             }
         }

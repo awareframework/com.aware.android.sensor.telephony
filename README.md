@@ -8,23 +8,24 @@ The telephony sensor provides information on the mobile phone capabilities of th
 
 ### TelephonySensor
 
-+ `startService(context: Context, config: TelephonyConfig?)`: Starts the telephony sensor with the optional configuration.
-+ `stopService(context: Context)`: Stops the service.
++ `start(context: Context, config: TelephonySensor.Config?)`: Starts the telephony sensor with the optional configuration.
++ `stop(context: Context)`: Stops the service.
 
-### TelephonyConfig
+### TelephonySensor.Config
 
 Class to hold the configuration of the sensor.
 
 #### Fields
 
-+ `debug: Boolean`: enable/disable logging to `Logcat`. (default = false)
-+ `host: String`: Host for syncing the database. (default = null)
-+ `key: String`: Encryption key for the database. (default = no encryption)
-+ `host: String`: Host for syncing the database. (default = null)
-+ `type: EngineDatabaseType`: Which db engine to use for saving data. (default = NONE)
-+ `path: String`: Path of the database.
-+ `deviceId: String`: Id of the device that will be associated with the events and the sensor. (default = "")
-+ `sensorObserver: TelephonyObserver`: Callback for live data updates.
++ `sensorObserver: TelephonySensor.Observer`: Callback for live data updates.
++ `enabled: Boolean` Sensor is enabled or not. (default = false)
++ `debug: Boolean` enable/disable logging to `Logcat`. (default = false)
++ `label: String` Label for the data. (default = "")
++ `deviceId: String` Id of the device that will be associated with the events and the sensor. (default = "")
++ `dbEncryptionKey` Encryption key for the database. (default =String? = null)
++ `dbType: Engine` Which db engine to use for saving data. (default = `Engine.DatabaseType.NONE`)
++ `dbPath: String` Path of the database. (default = "aware_wifi")
++ `dbHost: String` Host for syncing the database. (Defult = `null`)
 
 ## Broadcasts
 
@@ -116,8 +117,8 @@ Contains the CDMA tower profile.
 
 ```kotlin
 // To start the service.
-TelephonySensor.startService(appContext, TelephonySensor.TelephonyConfig().apply {
-    sensorObserver = object : TelephonySensor.TelephonyObserver {
+TelephonySensor.start(appContext, TelephonySensor.Config().apply {
+    sensorObserver = object : TelephonySensor.Observer {
         override fun onSignalStrengthChanged(strength: SignalStrength) {
             // your code here...
         }
@@ -132,7 +133,7 @@ TelephonySensor.startService(appContext, TelephonySensor.TelephonyConfig().apply
 })
 
 // To stop the service
-TelephonySensor.stopService(appContext)
+TelephonySensor.stop(appContext)
 ```
 
 ## License

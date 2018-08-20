@@ -20,8 +20,8 @@ class ExampleInstrumentedTest {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
 
-        TelephonySensor.startService(appContext, TelephonySensor.TelephonyConfig().apply {
-            sensorObserver = object : TelephonySensor.SensorObserver {
+        TelephonySensor.start(appContext, TelephonySensor.Config().apply {
+            sensorObserver = object : TelephonySensor.Observer {
                 override fun onSignalStrengthChanged(strength: SignalStrength) {
                     // your code here...
                 }
